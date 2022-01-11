@@ -40,6 +40,12 @@ vfs_context_t vfs_context_kernel(void);
 #define P_WEXIT					0x00002000
 #define P_INMEM					0
 
+// From XNU sys/vnode_internal.h
+#define VROOT					0x000001
+
+// From FreeBSD sys/vnode.h
+#define VV_ROOT					VROOT
+
 // From FreeBSD sys/mount.h
 #define MNT_ILOCK(mp)		lck_mtx_lock(&mp->mnt_mlock)
 #define MNT_IUNLOCK(mp)		lck_mtx_unlock(&mp->mnt_mlock)
