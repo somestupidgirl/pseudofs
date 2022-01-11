@@ -222,6 +222,7 @@ pfs_getattr(struct vop_getattr_args *va)
 	struct vattr *vap = va->a_vap;
 	struct proc *proc;
 	int error = 0;
+	thread_t curthread = current_thread();
 
 	PFS_TRACE(("%s", pn->pn_name));
 	pfs_assert_not_owned(pn);
@@ -289,6 +290,7 @@ pfs_ioctl(struct vop_ioctl_args *va)
 	struct pfs_node *pn;
 	struct proc *proc;
 	int error;
+	thread_t curthread = current_thread();
 
 	vn = va->a_vp;
 	vn_lock(vn, LK_SHARED | LK_RETRY);
@@ -342,6 +344,7 @@ pfs_getextattr(struct vop_getextattr_args *va)
 	struct pfs_node *pn = pvd->pvd_pn;
 	struct proc *proc;
 	int error;
+	thread_t curthread = current_thread();
 
 	PFS_TRACE(("%s", pn->pn_name));
 	pfs_assert_not_owned(pn);
@@ -460,6 +463,7 @@ pfs_lookup(struct vop_cachedlookup_args *va)
 	pid_t pid = pvd->pvd_pid;
 	char *pname;
 	int error, i, namelen, visible;
+	thread_t curthread = current_thread();
 
 	PFS_TRACE(("%.*s", (int)cnp->cn_namelen, cnp->cn_nameptr));
 	pfs_assert_not_owned(pd);
@@ -682,6 +686,7 @@ pfs_read(struct vop_read_args *va)
 	int error, locked;
 	off_t buflen, buflim;
 	struct sbuf_seek_helper ssh;
+	thread_t curthread = current_thread();
 
 	PFS_TRACE(("%s", pn->pn_name));
 	pfs_assert_not_owned(pn);
@@ -858,6 +863,7 @@ pfs_readdir(struct vop_readdir_args *va)
 	struct pfsdirentlist lst;
 	off_t offset;
 	int error, i, resid;
+	thread_t curthread = current_thread();
 
 	STAILQ_INIT(&lst);
 	error = 0;
@@ -992,6 +998,7 @@ pfs_readlink(struct vop_readlink_args *va)
 	char buf[PATH_MAX];
 	struct sbuf sb;
 	int error, locked;
+	thread_t curthread = current_thread();
 
 	PFS_TRACE(("%s", pn->pn_name));
 	pfs_assert_not_owned(pn);
@@ -1088,6 +1095,7 @@ pfs_write(struct vop_write_args *va)
 	struct proc *proc;
 	struct sbuf sb;
 	int error;
+	thread_t curthread = current_thread();
 
 	PFS_TRACE(("%s", pn->pn_name));
 	pfs_assert_not_owned(pn);
