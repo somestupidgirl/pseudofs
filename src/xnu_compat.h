@@ -10,6 +10,15 @@
 #include <sys/types.h>
 #include <sys/vnode.h>
 
+// From XNU sys/mount_internal.h
+int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, uint32_t, vfs_context_t);
+
+// From XNU sys/vnode.h (guarded by KERNEL_PRIVATE)
+vfs_context_t vfs_context_kernel(void);
+
+// From XNU sys/mount_internal.h
+#define KERNEL_MOUNT_NOAUTH 	0x01
+
 // From FreeBSD sys/limits.h
 #define OFF_MAX					LONG_MAX
 #define OFF_MIN					LONG_MIN

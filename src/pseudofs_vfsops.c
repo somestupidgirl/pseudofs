@@ -398,10 +398,18 @@ pfs_mount(struct pfs_info *pi, struct mount *mp)
 int
 pfs_cmount(struct mntarg *ma, void *data, uint64_t flags)
 {
-	int error;
+    int error;
+    vfs_context_t ctx = vfs_context_kernel();
+    const char * mntname;
+    char fsname[] = "pfs";
 
-	error = kernel_mount(ma, flags);
-	return (error);
+    error = kernel_mount(fsname, NULLVP, NULLVP, mntname, NULL, 0, MNT_DONTBROWSE, KERNEL_MOUNT_NOAUTH, ctx);
+    if (error) {
+        printf("pfs_kernel_mount: kernel_mount failed: %d\n", error);
+        return error;
+    }
+
+    return 0;
 }
 
 /*
