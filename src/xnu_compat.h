@@ -19,6 +19,15 @@ struct mount {
     struct vfsstatfs        mnt_vfsstat;
 };
 
+// From XNU sys/vnode_internal.h
+struct vnode {
+    lck_mtx_t               *v_lock;
+    uint32_t                 v_flag;
+    uint16_t                 v_type;
+    mount_t                  v_mount;
+    void                    *v_data;
+};
+
 // From XNU sys/mount_internal.h
 int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, uint32_t, vfs_context_t);
 
