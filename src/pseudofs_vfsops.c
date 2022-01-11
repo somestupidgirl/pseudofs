@@ -459,8 +459,8 @@ pfs_init(struct pfs_info *pi, struct vfsconf *vfc)
 		return (error);
 	}
 
-	if (bootverbose)
-		printf("%s registered\n", pi->pi_name);
+//	if (bootverbose)
+//		printf("%s registered\n", pi->pi_name);
 	return (0);
 }
 
@@ -475,8 +475,8 @@ pfs_uninit(struct pfs_info *pi, struct vfsconf *vfc)
 	pfs_destroy(pi->pi_root);
 	pi->pi_root = NULL;
 	pfs_fileno_uninit(pi);
-	if (bootverbose)
-		printf("%s unregistered\n", pi->pi_name);
+//	if (bootverbose)
+//		printf("%s unregistered\n", pi->pi_name);
 	error = (pi->pi_uninit)(pi, vfc);
 	return (error);
 }
