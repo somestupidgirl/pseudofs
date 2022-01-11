@@ -411,10 +411,8 @@ int
 pfs_unmount(struct mount *mp, int mntflags)
 {
 	int error;
-	thread_t curthread = current_thread();
 
-	error = vflush(mp, 0, (mntflags & MNT_FORCE) ?  FORCECLOSE : 0,
-	    curthread);
+	error = vflush(mp, 0, (mntflags & MNT_FORCE) ?  FORCECLOSE : 0);
 	return (error);
 }
 
