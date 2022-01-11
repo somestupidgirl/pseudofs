@@ -33,6 +33,8 @@
 #ifndef _PSEUDOFS_H_INCLUDED
 #define _PSEUDOFS_H_INCLUDED
 
+#include <sys/mount.h>
+
 #include "xnu_compat.h"
 //#include <sys/jail.h>
 
@@ -54,7 +56,7 @@ struct vnode;
  * Limits and constants
  */
 #define PFS_NAMELEN		128
-#define PFS_FSNAMELEN		16	/* equal to MFSNAMELEN */
+#define PFS_FSNAMELEN	MFSNAMELEN	/* equal to MFSNAMELEN */
 #define PFS_DELEN		(offsetof(struct dirent, d_name) + PFS_NAMELEN)
 
 typedef enum {
