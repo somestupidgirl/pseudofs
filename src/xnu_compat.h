@@ -53,6 +53,9 @@ vfs_context_t vfs_context_kernel(void);
 // FIXME: error: use of undeclared identifier 'M_PFSNODES'
 #define M_PFSNODES				ENOTSUP
 
+// FIXME: error: use of undeclared identifier 'M_PFSVNCACHE'
+#define M_PFSVNCACHE 			ENOTSUP
+
 /* Not supported */
 #define CTLFLAG_MPSAFE			ENOTSUP
 #define MBF_NOWAIT				ENOTSUP
