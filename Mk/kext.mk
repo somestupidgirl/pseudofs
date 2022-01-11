@@ -121,8 +121,8 @@ LIBS+=		-LMacKernelSDK/Library/x86_64 -lkmod -lcc_kext
 KLFLAGS+=	-c
 
 # source, header, object and make files
-SRCS:=		$(wildcard *.c)
-HDRS:=		$(wildcard *.h)
+SRCS:=		$(wildcard **/*.c)
+HDRS:=		$(wildcard **/*.h)
 
 OBJS:=		$(SRCS:.c=.o)
 MKFS:=		$(wildcard Makefile GNUmakefile Mk/*.mk)
