@@ -51,6 +51,7 @@ __FBSDID("$FreeBSD$");
 
 #include "pseudofs.h"
 #include "pseudofs_internal.h"
+#include "xnu_compat.h"
 
 #define KASSERT_PN_IS_DIR(pn)						\
 	KASSERT((pn)->pn_type == pfstype_root ||			\

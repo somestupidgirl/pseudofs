@@ -33,6 +33,7 @@
 #ifndef _PSEUDOFS_H_INCLUDED
 #define _PSEUDOFS_H_INCLUDED
 
+#include "xnu_compat.h"
 //#include <sys/jail.h>
 
 /*

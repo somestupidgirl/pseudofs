@@ -44,6 +44,7 @@ __FBSDID("$FreeBSD$");
 
 #include "pseudofs.h"
 #include "pseudofs_internal.h"
+#include "xnu_compat.h"
 
 static MALLOC_DEFINE(M_PFSVNCACHE, "pfs_vncache", "pseudofs vnode cache");
 
