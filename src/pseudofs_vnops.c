@@ -37,15 +37,15 @@ __FBSDID("$FreeBSD$");
 #include <sys/ctype.h>
 #include <sys/dirent.h>
 #include <sys/fcntl.h>
-#include <sys/limits.h>
+//#include <sys/limits.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/mount.h>
-#include <sys/mutex.h>
+//#include <sys/mutex.h>
 #include <sys/namei.h>
 #include <sys/proc.h>
 #include <sys/sbuf.h>
-#include <sys/sx.h>
+//#include <sys/sx.h>
 #include <sys/sysctl.h>
 #include <sys/vnode.h>
 

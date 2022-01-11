@@ -33,7 +33,7 @@
 #ifndef _PSEUDOFS_H_INCLUDED
 #define _PSEUDOFS_H_INCLUDED
 
-#include <sys/jail.h>
+//#include <sys/jail.h>
 
 /*
  * Opaque structures
