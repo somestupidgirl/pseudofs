@@ -34,6 +34,9 @@ int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, ui
 // From XNU sys/vnode.h (guarded by KERNEL_PRIVATE)
 vfs_context_t vfs_context_kernel(void);
 
+// From XNU sys/proc_internal.h
+extern int nprocs, maxproc;
+
 // From XNU sys/mount_internal.h
 #define KERNEL_MOUNT_NOAUTH 	0x01
 
