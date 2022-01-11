@@ -356,6 +356,11 @@ pfs_destroy(struct pfs_node *pn)
 	return (0);
 }
 
+void pfs_mountedfrom(struct mount *vfsp, char *osname)
+{
+    (void) copystr(osname, vfs_statfs(vfsp)->f_mntfromname, MNAMELEN - 1, 0);
+}
+
 /*
  * Mount a pseudofs instance
  */
@@ -375,7 +380,7 @@ pfs_mount(struct pfs_info *pi, struct mount *mp)
 	vfs_getnewfsid(mp);
 
 	sbp = &mp->mnt_stat;
-	vfs_mountedfrom(mp, pi->pi_name);
+	pfs_mountedfrom(mp, pi->pi_name);
 	sbp->f_bsize = PAGE_SIZE;
 	sbp->f_iosize = PAGE_SIZE;
 	sbp->f_blocks = 1;
