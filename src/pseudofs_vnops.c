@@ -977,7 +977,7 @@ pfs_readdir(struct vop_readdir_args *va)
 	STAILQ_FOREACH_SAFE(pfsent, &lst, link, pfsent2) {
 		if (error == 0)
 			error = uiomove(&pfsent->entry, PFS_DELEN, uio);
-		free(pfsent, M_IOV);
+		FREE(pfsent, M_IOV);
 		i++;
 	}
 	PFS_TRACE(("%ju bytes", (uintmax_t)(i * PFS_DELEN)));

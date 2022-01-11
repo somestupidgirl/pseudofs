@@ -351,7 +351,7 @@ pfs_destroy(struct pfs_node *pn)
 	/* destroy the node */
 	pfs_fileno_free(pn);
 	lck_mtx_destroy(pn->pn_mutex, NULL);
-	free(pn, M_PFSNODES);
+	FREE(pn, M_PFSNODES);
 
 	return (0);
 }

@@ -161,7 +161,7 @@ alloc:
 	pvd = malloc(sizeof *pvd, M_PFSVNCACHE, M_WAITOK);
 	error = getnewvnode("pseudofs", mp, &pfs_vnodeops, vpp);
 	if (error) {
-		free(pvd, M_PFSVNCACHE);
+		FREE(pvd, M_PFSVNCACHE);
 		return (error);
 	}
 	pvd->pvd_pn = pn;
@@ -202,7 +202,7 @@ alloc:
 	VN_LOCK_AREC(*vpp);
 	error = insmntque(*vpp, mp);
 	if (error != 0) {
-		free(pvd, M_PFSVNCACHE);
+		FREE(pvd, M_PFSVNCACHE);
 		*vpp = NULLVP;
 		return (error);
 	}
@@ -258,7 +258,7 @@ pfs_vncache_free(struct vnode *vp)
 	}
 	lck_mtx_unlock(pfs_vncache_mutex);
 
-	free(pvd, M_PFSVNCACHE);
+	FREE(pvd, M_PFSVNCACHE);
 	vp->v_data = NULL;
 	return (0);
 }
