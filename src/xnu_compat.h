@@ -11,6 +11,15 @@
 #include <sys/vnode.h>
 
 // From XNU sys/mount_internal.h
+struct mount {
+    lck_mtx_t               *mnt_mlock;
+    uint32_t                mnt_flag;
+    uint32_t                mnt_kern_flag;
+    qaddr_t                 mnt_data;
+    struct vfsstatfs        mnt_vfsstat;
+};
+
+// From XNU sys/mount_internal.h
 int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, uint32_t, vfs_context_t);
 
 // From XNU sys/vnode.h (guarded by KERNEL_PRIVATE)

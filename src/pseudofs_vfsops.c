@@ -379,7 +379,7 @@ pfs_mount(struct pfs_info *pi, struct mount *mp)
 	mp->mnt_data = pi;
 	vfs_getnewfsid(mp);
 
-	sbp = &mp->mnt_stat;
+	sbp = &mp->mnt_vfsstat;
 	pfs_mountedfrom(mp, pi->pi_name);
 	sbp->f_bsize = PAGE_SIZE;
 	sbp->f_iosize = PAGE_SIZE;
