@@ -31,6 +31,8 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
+#include <kern/locks.h>
+
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
@@ -41,7 +43,6 @@ __FBSDID("$FreeBSD$");
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/mount.h>
-//#include <sys/mutex.h>
 #include <sys/namei.h>
 #include <sys/proc.h>
 #include <sys/sbuf.h>
@@ -94,7 +95,7 @@ pfs_visible_proc(struct thread *td, struct pfs_node *pn, struct proc *proc)
 	if (proc == NULL)
 		return (0);
 
-	PROC_LOCK_ASSERT(proc, MA_OWNED);
+	PROC_LOCK_ASSERT(proc, LCK_MTX_ASSERT_OWNED);
 
 	visible = ((proc->p_flag & P_WEXIT) == 0);
 	if (visible)

@@ -31,6 +31,8 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
+#include <kern/locks.h>
+
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
@@ -38,7 +40,6 @@ __FBSDID("$FreeBSD$");
 #include <sys/malloc.h>
 //#include <sys/module.h>
 #include <sys/mount.h>
-//#include <sys/mutex.h>
 #include <sys/proc.h>
 #include <sys/sbuf.h>
 #include <sys/sysctl.h>
@@ -81,7 +82,7 @@ pfs_alloc_node_flags(struct pfs_info *pi, const char *name, pfs_type_t type, int
 	pn = malloc(sizeof *pn, M_PFSNODES, malloc_flags);
 	if (pn == NULL)
 		return (NULL);
-	mtx_init(&pn->pn_mutex, "pfs_node", NULL, MTX_DEF | MTX_DUPOK);
+	lck_mtx_init(pn->pn_mutex, NULL, LCK_SLEEP_DEFAULT | MTX_DUPOK);
 	strlcpy(pn->pn_name, name, sizeof pn->pn_name);
 	pn->pn_type = type;
 	pn->pn_info = pi;
@@ -348,7 +349,7 @@ pfs_destroy(struct pfs_node *pn)
 
 	/* destroy the node */
 	pfs_fileno_free(pn);
-	mtx_destroy(&pn->pn_mutex);
+	lck_mtx_destroy(pn->pn_mutex, NULL);
 	free(pn, M_PFSNODES);
 
 	return (0);

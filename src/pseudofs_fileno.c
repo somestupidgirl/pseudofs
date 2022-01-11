@@ -31,13 +31,14 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
+#include <kern/locks.h>
+
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
 //#include <sys/limits.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
-//#include <sys/mutex.h>
 #include <sys/proc.h>
 #include <sys/sysctl.h>
 #include <sys/systm.h>
@@ -53,8 +54,8 @@ void
 pfs_fileno_init(struct pfs_info *pi)
 {
 
-	mtx_init(&pi->pi_mutex, "pfs_fileno", NULL, MTX_DEF);
-	pi->pi_unrhdr = new_unrhdr(3, INT_MAX / NO_PID, &pi->pi_mutex);
+	lck_mtx_init(pi->pi_mutex, NULL, LCK_SLEEP_DEFAULT);
+	pi->pi_unrhdr = new_unrhdr(3, INT_MAX / NO_PID, pi->pi_mutex);
 }
 
 /*
@@ -66,7 +67,7 @@ pfs_fileno_uninit(struct pfs_info *pi)
 
 	delete_unrhdr(pi->pi_unrhdr);
 	pi->pi_unrhdr = NULL;
-	mtx_destroy(&pi->pi_mutex);
+	lck_mtx_destroy(pi->pi_mutex, NULL);
 }
 
 /*

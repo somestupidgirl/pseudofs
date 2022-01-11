@@ -31,13 +31,14 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
+#include <kern/locks.h>
+
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
 #include <sys/eventhandler.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
-//#include <sys/mutex.h>
 #include <sys/proc.h>
 #include <sys/sysctl.h>
 #include <sys/vnode.h>
@@ -89,7 +90,7 @@ void
 pfs_vncache_load(void)
 {
 
-	mtx_init(&pfs_vncache_mutex, "pfs_vncache", NULL, MTX_DEF);
+	lck_mtx_init(pfs_vncache_mutex, NULL, LCK_SLEEP_DEFAULT);
 	pfs_vncache_hashtbl = hashinit(maxproc / 4, M_PFSVNCACHE, &pfs_vncache_hash);
 	pfs_exit_tag = EVENTHANDLER_REGISTER(process_exit, pfs_exit, NULL,
 	    EVENTHANDLER_PRI_ANY);
@@ -106,7 +107,7 @@ pfs_vncache_unload(void)
 	pfs_purge_all();
 	KASSERT(pfs_vncache_entries == 0,
 	    ("%d vncache entries remaining", pfs_vncache_entries));
-	mtx_destroy(&pfs_vncache_mutex);
+	lck_mtx_destroy(pfs_vncache_mutex, NULL);
 }
 
 /*
@@ -129,13 +130,13 @@ pfs_vncache_alloc(struct mount *mp, struct vnode **vpp,
 	if (SLIST_EMPTY(hash))
 		goto alloc;
 retry:
-	mtx_lock(&pfs_vncache_mutex);
+	lck_mtx_lock(pfs_vncache_mutex);
 	SLIST_FOREACH(pvd, hash, pvd_hash) {
 		if (pvd->pvd_pn == pn && pvd->pvd_pid == pid &&
 		    pvd->pvd_vnode->v_mount == mp) {
 			vp = pvd->pvd_vnode;
 			vs = vget_prep(vp);
-			mtx_unlock(&pfs_vncache_mutex);
+			lck_mtx_unlock(pfs_vncache_mutex);
 			if (vget_finish(vp, LK_EXCLUSIVE, vs) == 0) {
 				++pfs_vncache_hits;
 				*vpp = vp;
@@ -154,7 +155,7 @@ retry:
 			goto retry;
 		}
 	}
-	mtx_unlock(&pfs_vncache_mutex);
+	lck_mtx_unlock(pfs_vncache_mutex);
 alloc:
 	/* nope, get a new one */
 	pvd = malloc(sizeof *pvd, M_PFSVNCACHE, M_WAITOK);
@@ -206,7 +207,7 @@ alloc:
 		return (error);
 	}
 retry2:
-	mtx_lock(&pfs_vncache_mutex);
+	lck_mtx_lock(pfs_vncache_mutex);
 	/*
 	 * Other thread may race with us, creating the entry we are
 	 * going to insert into the cache. Recheck after
@@ -217,7 +218,7 @@ retry2:
 		    pvd2->pvd_vnode->v_mount == mp) {
 			vp = pvd2->pvd_vnode;
 			VI_LOCK(vp);
-			mtx_unlock(&pfs_vncache_mutex);
+			lck_mtx_unlock(pfs_vncache_mutex);
 			if (vget(vp, LK_EXCLUSIVE | LK_INTERLOCK) == 0) {
 				++pfs_vncache_hits;
 				vgone(*vpp);
@@ -233,7 +234,7 @@ retry2:
 	if (++pfs_vncache_entries > pfs_vncache_maxentries)
 		pfs_vncache_maxentries = pfs_vncache_entries;
 	SLIST_INSERT_HEAD(hash, pvd, pvd_hash);
-	mtx_unlock(&pfs_vncache_mutex);
+	lck_mtx_unlock(pfs_vncache_mutex);
 	return (0);
 }
 
@@ -245,7 +246,7 @@ pfs_vncache_free(struct vnode *vp)
 {
 	struct pfs_vdata *pvd, *pvd2;
 
-	mtx_lock(&pfs_vncache_mutex);
+	lck_mtx_lock(pfs_vncache_mutex);
 	pvd = (struct pfs_vdata *)vp->v_data;
 	KASSERT(pvd != NULL, ("pfs_vncache_free(): no vnode data\n"));
 	SLIST_FOREACH(pvd2, PFS_VNCACHE_HASH(pvd->pvd_pid), pvd_hash) {
@@ -255,7 +256,7 @@ pfs_vncache_free(struct vnode *vp)
 		--pfs_vncache_entries;
 		break;
 	}
-	mtx_unlock(&pfs_vncache_mutex);
+	lck_mtx_unlock(pfs_vncache_mutex);
 
 	free(pvd, M_PFSVNCACHE);
 	vp->v_data = NULL;
@@ -302,7 +303,7 @@ pfs_purge(struct pfs_node *pn)
 	struct vnode *vnp;
 	u_long i, removed;
 
-	mtx_lock(&pfs_vncache_mutex);
+	lck_mtx_lock(pfs_vncache_mutex);
 restart:
 	removed = 0;
 	for (i = 0; i < pfs_vncache_hash; i++) {
@@ -312,16 +313,16 @@ restart_chain:
 				continue;
 			vnp = pvd->pvd_vnode;
 			vhold(vnp);
-			mtx_unlock(&pfs_vncache_mutex);
+			lck_mtx_unlock(pfs_vncache_mutex);
 			pfs_purge_one(vnp);
 			removed++;
-			mtx_lock(&pfs_vncache_mutex);
+			lck_mtx_lock(pfs_vncache_mutex);
 			goto restart_chain;
 		}
 	}
 	if (removed > 0)
 		goto restart;
-	mtx_unlock(&pfs_vncache_mutex);
+	lck_mtx_unlock(pfs_vncache_mutex);
 }
 
 static void
@@ -347,15 +348,15 @@ pfs_exit(void *arg, struct proc *p)
 	if (SLIST_EMPTY(hash))
 		return;
 restart:
-	mtx_lock(&pfs_vncache_mutex);
+	lck_mtx_lock(pfs_vncache_mutex);
 	SLIST_FOREACH(pvd, hash, pvd_hash) {
 		if (pvd->pvd_pid != pid)
 			continue;
 		vnp = pvd->pvd_vnode;
 		vhold(vnp);
-		mtx_unlock(&pfs_vncache_mutex);
+		lck_mtx_unlock(pfs_vncache_mutex);
 		pfs_purge_one(vnp);
 		goto restart;
 	}
-	mtx_unlock(&pfs_vncache_mutex);
+	lck_mtx_unlock(pfs_vncache_mutex);
 }

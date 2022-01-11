@@ -202,7 +202,7 @@ struct pfs_info {
 
 	/* members below this line are initialized at run time */
 	struct pfs_node		*pi_root;
-	struct mtx		 pi_mutex;
+	lck_mtx_t		 *pi_mutex;
 	struct unrhdr		*pi_unrhdr;
 };
 
@@ -223,7 +223,7 @@ struct pfs_node {
 	char			 pn_name[PFS_NAMELEN];
 	pfs_type_t		 pn_type;
 	int			 pn_flags;
-	struct mtx		 pn_mutex;
+	lck_mtx_t		*pn_mutex;
 	void			*pn_data;		/* (o) */
 
 	pfs_fill_t		 pn_fill;
