@@ -86,9 +86,15 @@ extern int nprocs, maxproc;
 #define LK_INTERLOCK			ENOTSUP
 #define LK_SHARED				ENOTSUP
 #define MTX_DUPOK				ENOTSUP
+#define VV_PROCDEP				ENOTSUP
 #define _PHOLD(p)
 #define PROC_ASSERT_HELD(p)
 #define VI_LOCK(vp)
 #define VN_LOCK_AREC(vp)
+#define VOP_LOCK(vp, flags)
+#define VOP_UNLOCK(vn)
+#define VOP_ISLOCKED(vp)
+#define VN_IS_DOOMED(vn)
+#define VREF(pvn)
 
 #endif /* _XNU_COMPAT_H */
