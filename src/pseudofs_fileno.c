@@ -55,7 +55,7 @@ pfs_fileno_init(struct pfs_info *pi)
 {
 
 	lck_mtx_init(pi->pi_mutex, NULL, LCK_SLEEP_DEFAULT);
-	pi->pi_unrhdr = new_unrhdr(3, INT_MAX / NO_PID, pi->pi_mutex);
+//	pi->pi_unrhdr = new_unrhdr(3, INT_MAX / NO_PID, pi->pi_mutex);
 }
 
 /*
@@ -65,8 +65,8 @@ void
 pfs_fileno_uninit(struct pfs_info *pi)
 {
 
-	delete_unrhdr(pi->pi_unrhdr);
-	pi->pi_unrhdr = NULL;
+//	delete_unrhdr(pi->pi_unrhdr);
+//	pi->pi_unrhdr = NULL;
 	lck_mtx_destroy(pi->pi_mutex, NULL);
 }
 
@@ -92,7 +92,7 @@ pfs_fileno_alloc(struct pfs_node *pn)
 	case pfstype_file:
 	case pfstype_symlink:
 	case pfstype_procdir:
-		pn->pn_fileno = alloc_unr(pn->pn_info->pi_unrhdr);
+//		pn->pn_fileno = alloc_unr(pn->pn_info->pi_unrhdr);
 		break;
 	case pfstype_this:
 		KASSERT(pn->pn_parent != NULL,
@@ -145,7 +145,7 @@ pfs_fileno_free(struct pfs_node *pn)
 	case pfstype_file:
 	case pfstype_symlink:
 	case pfstype_procdir:
-		free_unr(pn->pn_info->pi_unrhdr, pn->pn_fileno);
+//		free_unr(pn->pn_info->pi_unrhdr, pn->pn_fileno);
 		break;
 	case pfstype_this:
 	case pfstype_parent:
