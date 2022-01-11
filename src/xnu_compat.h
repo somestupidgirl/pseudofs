@@ -28,6 +28,13 @@ struct vnode {
     void                    *v_data;
 };
 
+// From XNU sys/proc_internal.h
+struct proc {
+    lck_mtx_t               *p_mlock;
+    pid_t                    p_pid;
+    unsigned int             p_flag;
+};
+
 // From XNU sys/mount_internal.h
 int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, uint32_t, vfs_context_t);
 
