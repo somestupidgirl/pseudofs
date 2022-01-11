@@ -159,7 +159,7 @@ retry:
 alloc:
 	/* nope, get a new one */
 	pvd = malloc(sizeof *pvd, M_PFSVNCACHE, M_WAITOK);
-	error = getnewvnode("pseudofs", mp, &pfs_vnodeops, vpp);
+	error = pfs_getnewvnode(mp, NULL, NULL, &vp, NULL, 1);
 	if (error) {
 		FREE(pvd, M_PFSVNCACHE);
 		return (error);

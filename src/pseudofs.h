@@ -222,6 +222,10 @@ struct pfs_info {
  * is not enforcable by WITNESS.
  */
 struct pfs_node {
+	struct vnode 	*pfs_lowervp;     /* VREFed once */
+	struct vnode 	*pfs_vnode;       /* Back pointer */
+	uint32_t		 pfs_lowervid;    /* vid for lowervp to detect lowervp getting recycled out from under us */
+	uint32_t 		 pfs_myvid;
 	char			 pn_name[PFS_NAMELEN];
 	pfs_type_t		 pn_type;
 	int			 pn_flags;
@@ -257,6 +261,10 @@ int		 pfs_root	(struct mount *mp, int flags,
 int		 pfs_statfs	(struct mount *mp, struct statfs *sbp);
 int		 pfs_init	(struct pfs_info *pi, struct vfsconf *vfc);
 int		 pfs_uninit	(struct pfs_info *pi, struct vfsconf *vfc);
+int 	 pfs_getnewvnode(struct mount * mp, struct vnode * lowervp, struct vnode * dvp, struct vnode ** vpp, struct componentname * cnp, int root);
+
+typedef int (*vop_t)(void *);
+extern vop_t * pfs_vnodeop_p;
 
 /*
  * Directory structure construction and manipulation
