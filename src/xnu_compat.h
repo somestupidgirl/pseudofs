@@ -1,3 +1,6 @@
+#ifndef _XNU_COMPAT_H
+#define _XNU_COMPAT_H
+
 #include <kern/locks.h>
 
 #include <sys/errno.h>
@@ -45,3 +48,5 @@
 #define PROC_ASSERT_HELD(p)
 #define VI_LOCK(vp)
 #define VN_LOCK_AREC(vp)
+
+#endif /* _XNU_COMPAT_H */
