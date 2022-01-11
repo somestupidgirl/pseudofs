@@ -50,6 +50,9 @@ vfs_context_t vfs_context_kernel(void);
 #define PROC_TRYLOCK(p)				lck_mtx_try_lock(&(p)->p_mlock)
 #define PROC_LOCK_ASSERT(p, type)	LCK_MTX_ASSERT(&(p)->p_mlock, (type))
 
+// FIXME: error: use of undeclared identifier 'M_PFSNODES'
+#define M_PFSNODES				ENOTSUP
+
 /* Not supported */
 #define CTLFLAG_MPSAFE			ENOTSUP
 #define MBF_NOWAIT				ENOTSUP
