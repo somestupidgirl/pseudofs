@@ -169,7 +169,7 @@ alloc:
 	(*vpp)->v_data = pvd;
 	switch (pn->pn_type) {
 	case pfstype_root:
-		(*vpp)->v_vflag = VV_ROOT;
+		(*vpp)->v_flag = VV_ROOT;
 #if 0
 		printf("root vnode allocated\n");
 #endif
@@ -196,7 +196,7 @@ alloc:
 	 * if the process changes (i.e. execve)
 	 */
 	if ((pn->pn_flags & PFS_PROCDEP) != 0)
-		(*vpp)->v_vflag |= VV_PROCDEP;
+		(*vpp)->v_flag |= VV_PROCDEP;
 	pvd->pvd_vnode = *vpp;
 	vn_lock(*vpp, LK_EXCLUSIVE | LK_RETRY);
 	VN_LOCK_AREC(*vpp);
