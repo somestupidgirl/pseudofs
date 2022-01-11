@@ -32,13 +32,14 @@
 __FBSDID("$FreeBSD$");
 
 #include <kern/locks.h>
+#include <libkern/libkern.h>
+#include <mach/mach_types.h>
 
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
-//#include <sys/module.h>
 #include <sys/mount.h>
 #include <sys/proc.h>
 #include <sys/sbuf.h>
@@ -483,31 +484,29 @@ pfs_uninit(struct pfs_info *pi, struct vfsconf *vfc)
 /*
  * Handle load / unload events
  */
-static int
-pfs_modevent(module_t mod, int evt, void *arg)
-{
-	switch (evt) {
-	case MOD_LOAD:
-		pfs_vncache_load();
-		break;
-	case MOD_UNLOAD:
-	case MOD_SHUTDOWN:
-		pfs_vncache_unload();
-		break;
-	default:
-		return EOPNOTSUPP;
-		break;
-	}
-	return 0;
+kern_return_t
+example_start(__attribute__((unused)) kmod_info_t *ki,
+              __attribute__((unused)) void *d) {
+	pfs_vncache_load();
+	printf(KEXTNAME_S ": start\n");
+	return KERN_SUCCESS;
 }
+
+kern_return_t
+example_stop(__attribute__((unused)) kmod_info_t *ki,
+             __attribute__((unused)) void *d) {
+	pfs_vncache_unload();
+	printf(KEXTNAME_S ": stop\n");
+	return KERN_SUCCESS;
+}
+
+extern kern_return_t _start(kmod_info_t *ki, void *d);
+extern kern_return_t _stop(kmod_info_t *ki, void *d);
 
 /*
  * Module declaration
  */
-static moduledata_t pseudofs_data = {
-	"pseudofs",
-	pfs_modevent,
-	NULL
-};
-DECLARE_MODULE(pseudofs, pseudofs_data, SI_SUB_EXEC, SI_ORDER_FIRST);
-MODULE_VERSION(pseudofs, 1);
+KMOD_EXPLICIT_DECL(BUNDLEID, KEXTBUILD_S, _start, _stop)
+__private_extern__ kmod_start_func_t *_realmain = example_start;
+__private_extern__ kmod_stop_func_t *_antimain = example_stop;
+__private_extern__ int _kext_apple_cc = __APPLE_CC__;
