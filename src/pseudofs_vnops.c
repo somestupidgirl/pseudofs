@@ -31,8 +31,6 @@
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD$");
 
-#include "opt_pseudofs.h"
-
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
@@ -51,8 +49,8 @@ __FBSDID("$FreeBSD$");
 #include <sys/sysctl.h>
 #include <sys/vnode.h>
 
-#include <fs/pseudofs/pseudofs.h>
-#include <fs/pseudofs/pseudofs_internal.h>
+#include "pseudofs.h"
+#include "pseudofs_internal.h"
 
 #define KASSERT_PN_IS_DIR(pn)						\
 	KASSERT((pn)->pn_type == pfstype_root ||			\
