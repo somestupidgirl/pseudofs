@@ -40,6 +40,7 @@
 #define LK_RETRY				ENOTSUP
 #define LK_INTERLOCK			ENOTSUP
 #define LK_SHARED				ENOTSUP
+#define MTX_DUPOK				ENOTSUP
 #define _PHOLD(p)
 #define PROC_ASSERT_HELD(p)
 #define VI_LOCK(vp)
