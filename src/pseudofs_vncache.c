@@ -49,7 +49,7 @@ __FBSDID("$FreeBSD$");
 
 static MALLOC_DEFINE(M_PFSVNCACHE, "pfs_vncache", "pseudofs vnode cache");
 
-static lck_mtx_t pfs_vncache_mutex;
+static lck_mtx_t *pfs_vncache_mutex;
 static eventhandler_tag pfs_exit_tag;
 static void pfs_exit(void *arg, struct proc *p);
 static void pfs_purge_all(void);
