@@ -1,6 +1,7 @@
 #ifndef _XNU_COMPAT_H
 #define _XNU_COMPAT_H
 
+#include <i386/simple_lock.h>
 #include <kern/locks.h>
 
 #include <sys/cdefs.h>
@@ -30,6 +31,10 @@ struct vnode {
     mount_t                  v_mount;
     void                    *v_data;
     int(**v_op)(void *);
+#if !defined(MACH_KERNEL_PRIVATE) && !defined(__APPLE_API_PRIVATE)
+#define MACH_KERNEL_PRIVATE && __APPLE_API_PRIVATE
+    simple_lock_data_t      v_interlock; // Darwin 0.3
+#endif
 };
 
 // From XNU sys/proc_internal.h
