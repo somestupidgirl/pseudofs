@@ -284,7 +284,7 @@ pfs_getattr(struct vnop_getattr_args *va)
  * Perform an ioctl
  */
 static int
-pfs_ioctl(struct vop_ioctl_args *va)
+pfs_ioctl(struct vnop_ioctl_args *va)
 {
 	struct vnode *vn;
 	struct pfs_vdata *pvd;
