@@ -692,7 +692,7 @@ pfs_sbuf_uio_drain(void *arg, const char *data, int len)
 	 * This is similar to the truncated read case for non-draining PFS
 	 * sbufs, and should be handled appropriately in fill-routines.
 	 */
-	if (uio->uio_resid == 0)
+	if (uio->uio_resid_64 == 0)
 		return (-ENOBUFS);
 
 	return (skipped + len);
@@ -747,18 +747,18 @@ pfs_read(struct vnop_read_args *va)
 #endif
 
 	if (pn->pn_flags & PFS_RAWRD) {
-		PFS_TRACE(("%zd resid", uio->uio_resid));
+		PFS_TRACE(("%zd resid", uio->uio_resid_64));
 		error = pn_fill(curthread, proc, pn, NULL, uio);
-		PFS_TRACE(("%zd resid", uio->uio_resid));
+		PFS_TRACE(("%zd resid", uio->uio_resid_64));
 		goto ret;
 	}
 
-	if (uio->uio_resid < 0 || uio->uio_offset < 0 ||
-	    uio->uio_resid > OFF_MAX - uio->uio_offset) {
+	if (uio->uio_resid_64 < 0 || uio->uio_offset < 0 ||
+	    uio->uio_resid_64 > OFF_MAX - uio->uio_offset) {
 		error = EINVAL;
 		goto ret;
 	}
-	buflen = uio->uio_offset + uio->uio_resid + 1;
+	buflen = uio->uio_offset + uio->uio_resid_64 + 1;
 	if (pn->pn_flags & PFS_AUTODRAIN)
 		/*
 		 * We can use a smaller buffer if we can stream output to the
@@ -801,7 +801,7 @@ pfs_read(struct vnop_read_args *va)
 		 * function as the caller's buffer was already filled.  Squash
 		 * to zero.
 		 */
-		if (uio->uio_resid == 0 && error == ENOBUFS)
+		if (uio->uio_resid_64 == 0 && error == ENOBUFS)
 			error = 0;
 	} else {
 		if (error == 0)
@@ -909,7 +909,7 @@ pfs_readdir(struct vnop_readdir_args *va)
 
 	/* only allow reading entire entries */
 	offset = uio->uio_offset;
-	resid = uio->uio_resid;
+	resid = uio->uio_resid_64;
 	if (offset < 0 || offset % PFS_DELEN != 0 ||
 	    (resid && resid < PFS_DELEN))
 		PFS_RETURN (EINVAL);
@@ -1143,7 +1143,7 @@ pfs_write(struct vnop_write_args *va)
 	if (pn->pn_fill == NULL)
 		PFS_RETURN (EIO);
 
-	if (uio->uio_resid > PFS_MAXBUFSIZ)
+	if (uio->uio_resid_64 > PFS_MAXBUFSIZ)
 		PFS_RETURN (EIO);
 
 	/*

@@ -29,11 +29,12 @@
 #define isdigit(d) ((d) >= '0' && (d) <= '9')
 
 /*
- * internal mount, proc and vnode structures
+ * internal mount, proc, uio and vnode structures
  *
  * mostly derived from XNU:
  *      sys/mount_internal.h
  *      sys/proc_internal.h
+ *      sys/uio_internal.h
  *      sys/vnode_internal.h
  */
 
@@ -50,6 +51,11 @@ struct proc {
     pid_t                            p_pid;
     unsigned int                     p_flag;
     u_int                            p_lock; // FreeBSD
+};
+
+struct uio {
+    off_t                            uio_offset;
+    user_size_t                      uio_resid_64;
 };
 
 struct vnode {
