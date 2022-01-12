@@ -239,8 +239,8 @@ pfs_getattr(struct vnop_getattr_args *va)
 	vap->va_filerev = 0;
 	vap->va_fsid = vn->v_mount->mnt_stat.f_fsid.val[0];
 	vap->va_nlink = 1;
-	nanotime(&vap->va_ctime);
-	vap->va_atime = vap->va_mtime = vap->va_ctime;
+	nanotime(&vap->va_change_time);
+	vap->va_access_time = vap->va_modify_time = vap->va_change_time;
 
 	switch (pn->pn_type) {
 	case pfstype_procdir:
