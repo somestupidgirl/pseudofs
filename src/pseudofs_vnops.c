@@ -794,7 +794,8 @@ pfs_read(struct vnop_read_args *va)
 	 * the data length. Then just use the full length because an
 	 * overflowed sbuf must be full.
 	 */
-	error = sbuf_finish(sb);
+// FIXME: assigning to 'int' from incompatible type 'void'
+//	error = sbuf_finish(sb);
 	if ((pn->pn_flags & PFS_AUTODRAIN)) {
 		/*
 		 * ENOBUFS just indicates early termination of the fill
@@ -1071,11 +1072,11 @@ pfs_readlink(struct vnop_readlink_args *va)
 		sbuf_delete(&sb);
 		PFS_RETURN (error);
 	}
-
-	if (sbuf_finish(&sb) != 0) {
-		sbuf_delete(&sb);
-		PFS_RETURN (ENAMETOOLONG);
-	}
+// FIXME: invalid operands to binary expression ('void' and 'int')
+//	if (sbuf_finish(&sb) != 0) {
+//		sbuf_delete(&sb);
+//		PFS_RETURN (ENAMETOOLONG);
+//	}
 
 	error = pfs_uiomove_frombuf(sbuf_data(&sb), sbuf_len(&sb), uio);
 	sbuf_delete(&sb);
