@@ -606,7 +606,7 @@ pfs_lookup(struct vop_cachedlookup_args *va)
  * Open a file or directory.
  */
 static int
-pfs_open(struct vop_open_args *va)
+pfs_open(struct vnop_open_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
