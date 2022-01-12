@@ -375,8 +375,8 @@ pfs_getextattr(struct vnop_getxattr_args *va)
 		error = EOPNOTSUPP;
 	else
 		error = pn_getextattr(curthread, proc, pn,
-		    va->a_attrnamespace, va->a_name, va->a_uio,
-		    va->a_size, va->a_cred);
+		    NULL, va->a_name, va->a_uio,
+		    va->a_size, va->a_context);
 
 	if (proc != NULL)
 		PROC_UNLOCK(proc);
