@@ -247,8 +247,12 @@ void vnode_lock(vnode_t);
 // From XNU sys/vnode.h (guarded by KERNEL_PRIVATE)
 vfs_context_t vfs_context_kernel(void);
 
-// From XNU sys/vnode.h (guarded by BSD_KERNEL_PRIVATE)
-int vaccess(mode_t file_mode, uid_t uid, gid_t gid, mode_t acc_mode, kauth_cred_t cred);
+// From FreeBSD sys/vnode.h
+int     vaccess(enum vtype type, mode_t file_mode, uid_t uid, gid_t gid, mode_t acc_mode, kauth_cred_t cred);
+void    vdrop(struct vnode *);
+int     vget(struct vnode *vp, int flags);
+void    vgone(struct vnode *vp);
+void    vhold(struct vnode *);
 
 // From XNU sys/vnode_if.h (guarded by XNU_KERNEL_PRIVATE)
 extern errno_t VNOP_GETATTR(vnode_t, struct vnode_attr *, vfs_context_t);
@@ -261,13 +265,6 @@ static __inline int vrefcnt(struct vnode *vp)
 
 // From FreeBSD sys/vnode.h
 enum    vgetstate  { VGET_NONE, VGET_HOLDCNT, VGET_USECOUNT };
-
-// From FreeBSD sys/vnode.h
-int     vaccess __P((mode_t file_mode, uid_t uid, gid_t gid, mode_t acc_mode, struct ucred *cred));
-void    vdrop __P((struct vnode *));
-int     vget __P((struct vnode *vp, int lockflag, struct proc *p));
-void    vgone __P((struct vnode *vp));
-void    vhold __P((struct vnode *));
 
 /* Not supported yet */
 #define CTLFLAG_MPSAFE              ENOTSUP
