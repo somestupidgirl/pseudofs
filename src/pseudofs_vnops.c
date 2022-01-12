@@ -294,7 +294,7 @@ pfs_ioctl(struct vnop_ioctl_args *va)
 	thread_t curthread = current_thread();
 
 	vn = va->a_vp;
-	vnode_lock(vn, LK_SHARED | LK_RETRY);
+	vnode_lock(vn);
 	if (VN_IS_DOOMED(vn)) {
 		VOP_UNLOCK(vn);
 		return (EBADF);
@@ -432,14 +432,14 @@ pfs_vptocnp(struct vnop_vptocnp_args *ap)
 
 	error = pfs_vncache_alloc(mp, dvp, pn, pid);
 	if (error) {
-		vnode_lock(vp, locked | LK_RETRY);
+		vnode_lock(vp);
 		vfs_unbusy(mp);
 		PFS_RETURN(error);
 	}
 
 	*buflen = i;
 	VOP_UNLOCK(*dvp);
-	vnode_lock(vp, locked | LK_RETRY);
+	vnode_lock(vp);
 	vfs_unbusy(mp);
 
 	PFS_RETURN (0);
@@ -511,7 +511,7 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 			vfs_ref(mp);
 			VOP_UNLOCK(vn);
 			error = vfs_busy(mp, 0);
-			vnode_lock(vn, LK_EXCLUSIVE | LK_RETRY);
+			vnode_lock(vn);
 			vfs_rel(mp);
 			if (error != 0)
 				PFS_RETURN(ENOENT);
@@ -583,7 +583,7 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 
 	if (cnp->cn_flags & ISDOTDOT) {
 		vfs_unbusy(mp);
-		vnode_lock(vn, LK_EXCLUSIVE | LK_RETRY);
+		vnode_lock(vn);
 		if (VN_IS_DOOMED(vn)) {
 			vput(*vpp);
 			*vpp = NULL;
@@ -596,7 +596,7 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
  failed:
 	if (cnp->cn_flags & ISDOTDOT) {
 		vfs_unbusy(mp);
-		vnode_lock(vn, LK_EXCLUSIVE | LK_RETRY);
+		vnode_lock(vn);
 		*vpp = NULL;
 	}
 	PFS_RETURN(error);
@@ -784,7 +784,7 @@ pfs_read(struct vnop_read_args *va)
 	}
 	sbuf_delete(sb);
 ret:
-	vnode_lock(vn, locked | LK_RETRY);
+	vnode_lock(vn);
 	vdrop(vn);
 	if (proc != NULL)
 		PRELE(proc);
@@ -1032,7 +1032,7 @@ pfs_readlink(struct vnop_readlink_args *va)
 
 	if (proc != NULL)
 		PRELE(proc);
-	vnode_lock(vn, locked | LK_RETRY);
+	vnode_lock(vn);
 	vdrop(vn);
 
 	if (error) {
