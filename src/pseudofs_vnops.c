@@ -535,7 +535,7 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 #endif
 			error = vfs_busy(mp, 0);
 			vnode_lock(vn);
-			vfs_rel(mp);
+//			vfs_rel(mp);
 			if (error != 0)
 				PFS_RETURN(ENOENT);
 //			if (VN_IS_DOOMED(vn)) {
