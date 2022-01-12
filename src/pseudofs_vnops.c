@@ -779,7 +779,7 @@ pfs_read(struct vnop_read_args *va)
 	if (pn->pn_flags & PFS_AUTODRAIN) {
 		ssh.skip_bytes = uio->uio_offset;
 		ssh.uio = uio;
-		sbuf_set_drain(sb, pfs_sbuf_uio_drain, &ssh);
+//		sbuf_set_drain(sb, pfs_sbuf_uio_drain, &ssh);
 	}
 
 	error = pn_fill(curthread, proc, pn, sb, uio);
