@@ -35,6 +35,9 @@ struct proc {
     unsigned int             p_flag;
 };
 
+struct vnop_vptocnp_args;
+struct vnop_cachedlookup_args;
+
 // From XNU sys/mount_internal.h
 int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, uint32_t, vfs_context_t);
 

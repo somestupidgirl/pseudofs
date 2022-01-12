@@ -374,7 +374,7 @@ pfs_getextattr(struct vnop_getxattr_args *va)
  * Convert a vnode to its component name
  */
 static int
-pfs_vptocnp(struct vop_vptocnp_args *ap)
+pfs_vptocnp(struct vnop_vptocnp_args *ap)
 {
 	struct vnode *vp = ap->a_vp;
 	struct vnode **dvp = ap->a_vpp;
@@ -452,7 +452,7 @@ failed:
  * Look up a file or directory
  */
 static int
-pfs_lookup(struct vop_cachedlookup_args *va)
+pfs_lookup(struct vnop_cachedlookup_args *va)
 {
 	struct vnode *vn = va->a_dvp;
 	struct vnode **vpp = va->a_vpp;
