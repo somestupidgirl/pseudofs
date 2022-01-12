@@ -992,7 +992,7 @@ pfs_readdir(struct vnop_readdir_args *va)
 			panic("%s has unexpected node type: %d", pn->pn_name, pn->pn_type);
 		}
 		PFS_TRACE(("%s", pfsent->entry.d_name));
-		dirent_terminate(&pfsent->entry);
+//		dirent_terminate(&pfsent->entry);
 		STAILQ_INSERT_TAIL(&lst, pfsent, link);
 		offset += PFS_DELEN;
 		resid -= PFS_DELEN;
