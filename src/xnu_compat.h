@@ -50,6 +50,7 @@ struct mount {
 };
 
 struct proc {
+    LIST_ENTRY(proc)                 p_list;
     lck_mtx_t                       *p_mlock;
     pid_t                            p_pid;
     kauth_cred_t                     p_ucred;
