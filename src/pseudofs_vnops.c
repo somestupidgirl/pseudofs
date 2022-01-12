@@ -203,7 +203,7 @@ pfs_close(struct vnop_close_args *va)
 		proc = NULL;
 	}
 
-	error = pn_close(va->a_td, proc, pn);
+	error = pn_close(NULL, proc, pn);
 
 	if (proc != NULL)
 		PROC_UNLOCK(proc);
