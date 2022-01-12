@@ -1070,7 +1070,7 @@ pfs_reclaim(struct vnop_reclaim_args *va)
  * Set attributes
  */
 static int
-pfs_setattr(struct vop_setattr_args *va)
+pfs_setattr(struct vnop_setattr_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
