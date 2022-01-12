@@ -121,7 +121,7 @@ pfs_visible(struct thread *td, struct pfs_node *pn, pid_t pid,
 		*p = NULL;
 	if (pid == NO_PID)
 		PFS_RETURN (1);
-	proc = pfind(pid);
+	proc = proc_find(pid);
 	if (proc == NULL)
 		PFS_RETURN (0);
 	if (pfs_visible_proc(td, pn, proc)) {
@@ -140,7 +140,7 @@ pfs_lookup_proc(pid_t pid, struct proc **p)
 {
 	struct proc *proc;
 
-	proc = pfind(pid);
+	proc = proc_find(pid);
 	if (proc == NULL)
 		return (0);
 	if ((proc->p_flag & P_WEXIT) != 0) {
@@ -198,7 +198,7 @@ pfs_close(struct vnop_close_args *va)
 		PFS_RETURN (0);
 
 	if (pvd->pvd_pid != NO_PID) {
-		proc = pfind(pvd->pvd_pid);
+		proc = proc_find(pvd->pvd_pid);
 	} else {
 		proc = NULL;
 	}
@@ -1012,7 +1012,7 @@ pfs_readlink(struct vnop_readlink_args *va)
 		PFS_RETURN (EIO);
 
 	if (pvd->pvd_pid != NO_PID) {
-		if ((proc = pfind(pvd->pvd_pid)) == NULL)
+		if ((proc = proc_find(pvd->pvd_pid)) == NULL)
 			PFS_RETURN (EIO);
 		if (proc->p_flag & P_WEXIT) {
 			PROC_UNLOCK(proc);
