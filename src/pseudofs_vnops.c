@@ -1054,7 +1054,7 @@ pfs_readlink(struct vnop_readlink_args *va)
  * Reclaim a vnode
  */
 static int
-pfs_reclaim(struct vop_reclaim_args *va)
+pfs_reclaim(struct vnop_reclaim_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
