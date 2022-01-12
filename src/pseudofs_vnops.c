@@ -390,6 +390,7 @@ pfs_getextattr(struct vnop_getxattr_args *va)
 static int
 pfs_vptocnp(struct vnop_vptocnp_args *ap)
 {
+#if 0
 	struct vnode *vp = ap->a_vp;
 	struct vnode **dvp = ap->a_vpp;
 	struct pfs_vdata *pvd = vp->v_data;
@@ -466,6 +467,7 @@ pfs_vptocnp(struct vnop_vptocnp_args *ap)
 failed:
 	pfs_unlock(pd);
 	PFS_RETURN(error);
+#endif
 }
 
 /*
@@ -474,6 +476,7 @@ failed:
 static int
 pfs_lookup(struct vnop_cachedlookup_args *va)
 {
+#if 0
 	struct vnode *vn = va->a_dvp;
 	struct vnode **vpp = va->a_vpp;
 	struct componentname *cnp = va->a_cnp;
@@ -626,6 +629,7 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 		*vpp = NULL;
 	}
 	PFS_RETURN(error);
+#endif
 }
 
 /*
