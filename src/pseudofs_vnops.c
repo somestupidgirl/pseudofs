@@ -829,7 +829,7 @@ pfs_iterate(struct thread *td, struct proc *proc, struct pfs_node *pd,
 {
 	int visible;
 
-	sx_assert(&allproc_lock, SX_SLOCKED);
+//	sx_assert(&allproc_lock, SX_SLOCKED);
 	pfs_assert_owned(pd);
  again:
 	if (*pn == NULL) {
@@ -920,7 +920,7 @@ pfs_readdir(struct vnop_readdir_args *va)
 	if (pid != NO_PID && !pfs_lookup_proc(pid, &proc))
 		PFS_RETURN (ENOENT);
 
-	sx_slock(&allproc_lock);
+//	sx_slock(&allproc_lock);
 	pfs_lock(pd);
 
 	KASSERT(pid == NO_PID || proc != NULL,
@@ -933,7 +933,7 @@ pfs_readdir(struct vnop_readdir_args *va)
 		if (!pfs_visible_proc(curthread, pd, proc)) {
 			_PRELE(proc);
 			PROC_UNLOCK(proc);
-			sx_sunlock(&allproc_lock);
+//			sx_sunlock(&allproc_lock);
 			pfs_unlock(pd);
 			PFS_RETURN (ENOENT);
 		}
@@ -948,7 +948,7 @@ pfs_readdir(struct vnop_readdir_args *va)
 				PROC_UNLOCK(proc);
 			}
 			pfs_unlock(pd);
-			sx_sunlock(&allproc_lock);
+//			sx_sunlock(&allproc_lock);
 			PFS_RETURN (0);
 		}
 	}
@@ -1002,7 +1002,7 @@ pfs_readdir(struct vnop_readdir_args *va)
 		PROC_UNLOCK(proc);
 	}
 	pfs_unlock(pd);
-	sx_sunlock(&allproc_lock);
+//	sx_sunlock(&allproc_lock);
 	i = 0;
 	STAILQ_FOREACH_SAFE(pfsent, &lst, link, pfsent2) {
 		if (error == 0)
