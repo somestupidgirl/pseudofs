@@ -100,7 +100,7 @@ pfs_visible_proc(struct thread *td, struct pfs_node *pn, struct proc *proc)
 
 	visible = ((proc->p_flag & P_WEXIT) == 0);
 	if (visible)
-		visible = (p_cansee(td, proc) == 0);
+		visible = (pfs_pcansee(td, proc) == 0);
 	if (visible && pn->pn_vis != NULL)
 		visible = pn_vis(td, proc, pn);
 	if (!visible)

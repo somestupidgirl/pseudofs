@@ -123,3 +123,10 @@ pfs_getnewvnode(
 	}
 	return error;
 }
+
+/* p_cansee */
+int
+pfs_pcansee(struct thread *td, struct proc *p)
+{
+  return (0);
+}
