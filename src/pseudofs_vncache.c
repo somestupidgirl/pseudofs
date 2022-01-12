@@ -77,7 +77,7 @@ SYSCTL_INT(_vfs_pfs_vncache, OID_AUTO, misses, CTLFLAG_RD,
     &pfs_vncache_misses, 0,
     "number of cache misses since initialization");
 
-extern struct vop_vector pfs_vnodeops;	/* XXX -> .h file */
+//extern struct vop_vector pfs_vnodeops;	/* XXX -> .h file */
 
 static SLIST_HEAD(pfs_vncache_head, pfs_vdata) *pfs_vncache_hashtbl;
 static u_long pfs_vncache_hash;
@@ -92,8 +92,8 @@ pfs_vncache_load(void)
 
 	lck_mtx_init(&pfs_vncache_mutex, NULL, LCK_SLEEP_DEFAULT);
 	pfs_vncache_hashtbl = hashinit(maxproc / 4, M_PFSVNCACHE, &pfs_vncache_hash);
-	pfs_exit_tag = EVENTHANDLER_REGISTER(process_exit, pfs_exit, NULL,
-	    EVENTHANDLER_PRI_ANY);
+//	pfs_exit_tag = EVENTHANDLER_REGISTER(process_exit, pfs_exit, NULL,
+//	    EVENTHANDLER_PRI_ANY);
 }
 
 /*
@@ -103,7 +103,7 @@ void
 pfs_vncache_unload(void)
 {
 
-	EVENTHANDLER_DEREGISTER(process_exit, pfs_exit_tag);
+//	EVENTHANDLER_DEREGISTER(process_exit, pfs_exit_tag);
 	pfs_purge_all();
 	KASSERT(pfs_vncache_entries == 0,
 	    ("%d vncache entries remaining", pfs_vncache_entries));
@@ -120,7 +120,7 @@ pfs_vncache_alloc(struct mount *mp, struct vnode **vpp,
 	struct pfs_vncache_head *hash;
 	struct pfs_vdata *pvd, *pvd2;
 	struct vnode *vp;
-	enum vgetstate vs;
+//	enum vgetstate vs;
 	int error;
 
 	/*
@@ -135,11 +135,11 @@ retry:
 		if (pvd->pvd_pn == pn && pvd->pvd_pid == pid &&
 		    pvd->pvd_vnode->v_mount == mp) {
 			vp = pvd->pvd_vnode;
-			vs = vget_prep(vp);
+//			vs = vget_prep(vp);
 			lck_mtx_unlock(&pfs_vncache_mutex);
-			if (vget_finish(vp, LK_EXCLUSIVE, vs) == 0) {
-				++pfs_vncache_hits;
-				*vpp = vp;
+//			if (vget_finish(vp, LK_EXCLUSIVE, vs) == 0) {
+//				++pfs_vncache_hits;
+//				*vpp = vp;
 				/*
 				 * Some callers cache_enter(vp) later, so
 				 * we have to make sure it's not in the
@@ -149,10 +149,10 @@ retry:
 				 * for entering the vnode in the VFS
 				 * cache.
 				 */
-				cache_purge(vp);
-				return (0);
-			}
-			goto retry;
+//				cache_purge(vp);
+//				return (0);
+//			}
+//			goto retry;
 		}
 	}
 	lck_mtx_unlock(&pfs_vncache_mutex);
@@ -198,14 +198,14 @@ alloc:
 	if ((pn->pn_flags & PFS_PROCDEP) != 0)
 		(*vpp)->v_flag |= VV_PROCDEP;
 	pvd->pvd_vnode = *vpp;
-	vn_lock(*vpp, LK_EXCLUSIVE | LK_RETRY);
+//	vn_lock(*vpp, LK_EXCLUSIVE | LK_RETRY);
 	VN_LOCK_AREC(*vpp);
-	error = insmntque(*vpp, mp);
-	if (error != 0) {
-		FREE(pvd, M_PFSVNCACHE);
-		*vpp = NULLVP;
-		return (error);
-	}
+//	error = insmntque(*vpp, mp);
+//	if (error != 0) {
+//		FREE(pvd, M_PFSVNCACHE);
+//		*vpp = NULLVP;
+//		return (error);
+//	}
 retry2:
 	lck_mtx_lock(&pfs_vncache_mutex);
 	/*
@@ -219,15 +219,15 @@ retry2:
 			vp = pvd2->pvd_vnode;
 			VI_LOCK(vp);
 			lck_mtx_unlock(&pfs_vncache_mutex);
-			if (vget(vp, LK_EXCLUSIVE | LK_INTERLOCK) == 0) {
-				++pfs_vncache_hits;
-				vgone(*vpp);
-				vput(*vpp);
-				*vpp = vp;
-				cache_purge(vp);
-				return (0);
-			}
-			goto retry2;
+//			if (vget(vp, LK_EXCLUSIVE | LK_INTERLOCK) == 0) {
+//				++pfs_vncache_hits;
+//				vgone(*vpp);
+//				vput(*vpp);
+//				*vpp = vp;
+//				cache_purge(vp);
+//				return (0);
+//			}
+//			goto retry2;
 		}
 	}
 	++pfs_vncache_misses;
@@ -291,9 +291,9 @@ pfs_purge_one(struct vnode *vnp)
 {
 
 	VOP_LOCK(vnp, LK_EXCLUSIVE);
-	vgone(vnp);
+//	vgone(vnp);
 	VOP_UNLOCK(vnp);
-	vdrop(vnp);
+//	vdrop(vnp);
 }
 
 void
@@ -312,7 +312,7 @@ restart_chain:
 			if (pn != NULL && pvd->pvd_pn != pn)
 				continue;
 			vnp = pvd->pvd_vnode;
-			vhold(vnp);
+//			vhold(vnp);
 			lck_mtx_unlock(&pfs_vncache_mutex);
 			pfs_purge_one(vnp);
 			removed++;
@@ -353,7 +353,7 @@ restart:
 		if (pvd->pvd_pid != pid)
 			continue;
 		vnp = pvd->pvd_vnode;
-		vhold(vnp);
+//		vhold(vnp);
 		lck_mtx_unlock(&pfs_vncache_mutex);
 		pfs_purge_one(vnp);
 		goto restart;
