@@ -1182,6 +1182,7 @@ pfs_write(struct vnop_write_args *va)
 /*
  * Vnode operations
  */
+#if 0
 struct vop_vector pfs_vnodeops = {
 	.vop_default =		&default_vnodeops,
 
@@ -1212,3 +1213,4 @@ struct vop_vector pfs_vnodeops = {
 	/* XXX I've probably forgotten a few that need VOP_EOPNOTSUPP */
 };
 VFS_VOP_VECTOR_REGISTER(pfs_vnodeops);
+#endif
