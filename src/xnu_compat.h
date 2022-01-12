@@ -25,6 +25,9 @@
 #define OFF_MAX                     LONG_MAX
 #define OFF_MIN                     LONG_MIN
 
+// From FreeBSD sys/malloc.h - removed from XNU for some reason
+#define M_IOV                       19
+
 // From XNU osfmk/kern/printf.c, since we don't have FreeBSD include/ctype.h
 #define isdigit(d) ((d) >= '0' && (d) <= '9')
 
