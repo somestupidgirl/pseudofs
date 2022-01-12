@@ -296,8 +296,11 @@ pfs_ioctl(struct vnop_ioctl_args *va)
 	vn = va->a_vp;
 	vnode_lock(vn);
 //	if (VN_IS_DOOMED(vn)) {
+#ifndef KERNEL
+#define KERNEL
 //		VOP_UNLOCK(vn);
 //		return (EBADF);
+#endif
 //	}
 	pvd = vn->v_data;
 	pn = pvd->pvd_pn;
@@ -306,13 +309,19 @@ pfs_ioctl(struct vnop_ioctl_args *va)
 	pfs_assert_not_owned(pn);
 
 	if (vn->v_type != VREG) {
+#ifndef KERNEL
+#define KERNEL
 		VOP_UNLOCK(vn);
+#endif
 		PFS_RETURN (EINVAL);
 	}
 	KASSERT_PN_IS_FILE(pn);
 
 	if (pn->pn_ioctl == NULL) {
+#ifndef KERNEL
+#define KERNEL
 		VOP_UNLOCK(vn);
+#endif
 		PFS_RETURN (ENOTTY);
 	}
 
@@ -321,7 +330,10 @@ pfs_ioctl(struct vnop_ioctl_args *va)
 	 * have changed since the open() call.
 	 */
 	if (!pfs_visible(curthread, pn, pvd->pvd_pid, &proc)) {
+#ifndef KERNEL
+#define KERNEL
 		VOP_UNLOCK(vn);
+#endif
 		PFS_RETURN (EIO);
 	}
 
@@ -329,8 +341,10 @@ pfs_ioctl(struct vnop_ioctl_args *va)
 
 	if (proc != NULL)
 		PROC_UNLOCK(proc);
-
+#ifndef KERNEL
+#define KERNEL
 	VOP_UNLOCK(vn);
+#endif
 	PFS_RETURN (error);
 }
 
@@ -427,8 +441,11 @@ pfs_vptocnp(struct vnop_vptocnp_args *ap)
 	/*
 	 * vp is held by caller.
 	 */
+#ifndef KERNEL
+#define KERNEL
 	locked = VOP_ISLOCKED(vp);
 	VOP_UNLOCK(vp);
+#endif
 
 	error = pfs_vncache_alloc(mp, dvp, pn, pid);
 	if (error) {
@@ -438,7 +455,10 @@ pfs_vptocnp(struct vnop_vptocnp_args *ap)
 	}
 
 	*buflen = i;
+#ifndef KERNEL
+#define KERNEL
 	VOP_UNLOCK(*dvp);
+#endif
 	vnode_lock(vp);
 	vfs_unbusy(mp);
 
@@ -509,7 +529,10 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 		error = vfs_busy(mp, MBF_NOWAIT);
 		if (error != 0) {
 			vfs_ref(mp);
+#ifndef KERNEL
+#define KERNEL
 			VOP_UNLOCK(vn);
+#endif
 			error = vfs_busy(mp, 0);
 			vnode_lock(vn);
 			vfs_rel(mp);
@@ -520,7 +543,10 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 //				PFS_RETURN(ENOENT);
 //			}
 		}
+#ifndef KERNEL
+#define KERNEL
 		VOP_UNLOCK(vn);
+#endif
 		KASSERT(pd->pn_parent != NULL,
 		    ("%s(): non-root directory has no parent", __func__));
 		/*
@@ -714,8 +740,11 @@ pfs_read(struct vnop_read_args *va)
 	}
 
 	vhold(vn);
+#ifndef KERNEL
+#define KERNEL
 	locked = VOP_ISLOCKED(vn);
 	VOP_UNLOCK(vn);
+#endif
 
 	if (pn->pn_flags & PFS_RAWRD) {
 		PFS_TRACE(("%zd resid", uio->uio_resid));
@@ -1022,8 +1051,11 @@ pfs_readlink(struct vnop_readlink_args *va)
 		PROC_UNLOCK(proc);
 	}
 	vhold(vn);
+#ifndef KERNEL
+#define KERNEL
 	locked = VOP_ISLOCKED(vn);
 	VOP_UNLOCK(vn);
+#endif
 
 	/* sbuf_new() can't fail with a static buffer */
 	sbuf_new(&sb, buf, sizeof buf, 0);

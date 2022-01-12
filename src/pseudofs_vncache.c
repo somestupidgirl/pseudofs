@@ -289,11 +289,13 @@ pfs_vncache_free(struct vnode *vp)
 static void
 pfs_purge_one(struct vnode *vnp)
 {
-
+#ifndef KERNEL
+#define KERNEL
 	VOP_LOCK(vnp, LK_EXCLUSIVE);
 //	vgone(vnp);
 	VOP_UNLOCK(vnp);
 //	vdrop(vnp);
+#endif
 }
 
 void

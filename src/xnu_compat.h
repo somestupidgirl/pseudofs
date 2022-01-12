@@ -3,12 +3,14 @@
 
 #include <kern/locks.h>
 
+#include <sys/cdefs.h>
 #include <sys/errno.h>
 #include <sys/mount.h>
 #include <sys/proc.h>
 #include <sys/systm.h>
 #include <sys/types.h>
 #include <sys/vnode.h>
+#include <sys/vnode_if.h>
 
 // From XNU sys/mount_internal.h
 struct mount {
@@ -27,6 +29,7 @@ struct vnode {
     uint16_t                 v_type;
     mount_t                  v_mount;
     void                    *v_data;
+    int(**v_op)(void *);
 };
 
 // From XNU sys/proc_internal.h
@@ -82,6 +85,73 @@ extern int nprocs, maxproc;
 #define PROC_TRYLOCK(p)				lck_mtx_try_lock(&(p)->p_mlock)
 #define PROC_LOCK_ASSERT(p, type)	LCK_MTX_ASSERT(&(p)->p_mlock, (type))
 
+// From XNU sys/vnode_internal.h
+#ifndef KERNEL
+#define KERNEL
+#define VOCALL(OPSV, OFF, AP) (( *((OPSV)[(OFF)])) (AP))
+#define VCALL(VP, OFF, AP) VOCALL((VP)->v_op,(OFF),(AP))
+#define VDESC(OP) (& __CONCAT(OP,_desc))
+#define VOFFSET(OP) (VDESC(OP)->vdesc_offset)
+
+// From Darwin-0.3 sys/vnode_if.h
+struct vop_lock_args {
+    struct vnodeop_desc *a_desc;
+    struct vnode *a_vp;
+    int a_flags;
+    struct proc *a_p;
+};
+extern struct vnodeop_desc vop_lock_desc;
+#define VOP_LOCK(vp, flags, p) _VOP_LOCK(vp, flags, p)
+static __inline int _VOP_LOCK(vp, flags, p)
+    struct vnode *vp;
+    int flags;
+    struct proc *p;
+{
+    struct vop_lock_args a;
+    a.a_desc = VDESC(vop_lock);
+    a.a_vp = vp;
+    a.a_flags = flags;
+    a.a_p = p;
+    return (VCALL(vp, VOFFSET(vop_lock), &a));
+}
+// From Darwin-0.3 sys/vnode_if.h
+struct vop_unlock_args {
+    struct vnodeop_desc *a_desc;
+    struct vnode *a_vp;
+    int a_flags;
+    struct proc *a_p;
+};
+extern struct vnodeop_desc vop_unlock_desc;
+#define VOP_UNLOCK(vp, flags, p) _VOP_UNLOCK(vp, flags, p)
+static __inline int _VOP_UNLOCK(vp, flags, p)
+    struct vnode *vp;
+    int flags;
+    struct proc *p;
+{
+    struct vop_unlock_args a;
+    a.a_desc = VDESC(vop_unlock);
+    a.a_vp = vp;
+    a.a_flags = flags;
+    a.a_p = p;
+    return (VCALL(vp, VOFFSET(vop_unlock), &a));
+}
+// From Darwin-0.3 sys/vnode_if.h
+struct vop_islocked_args {
+    struct vnodeop_desc *a_desc;
+    struct vnode *a_vp;
+};
+extern struct vnodeop_desc vop_islocked_desc;
+#define VOP_ISLOCKED(vp) _VOP_ISLOCKED(vp)
+static __inline int _VOP_ISLOCKED(vp)
+    struct vnode *vp;
+{
+    struct vop_islocked_args a;
+    a.a_desc = VDESC(vop_islocked);
+    a.a_vp = vp;
+    return (VCALL(vp, VOFFSET(vop_islocked), &a));
+}
+#endif
+
 // From XNU sys/vnode_if.h (guarded by XNU_KERNEL_PRIVATE)
 extern errno_t VNOP_GETATTR(vnode_t, struct vnode_attr *, vfs_context_t);
 
@@ -115,9 +185,6 @@ vrefcnt(struct vnode *vp)
 #define PROC_ASSERT_HELD(p)
 #define VI_LOCK(vp)
 #define VN_LOCK_AREC(vp)
-#define VOP_LOCK(vp, flags)
-#define VOP_UNLOCK(vn)
-#define VOP_ISLOCKED(vp)
 #define VREF(pvn)
 
 #endif /* _XNU_COMPAT_H */
