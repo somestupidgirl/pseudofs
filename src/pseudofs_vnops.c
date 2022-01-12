@@ -676,7 +676,7 @@ pfs_sbuf_uio_drain(void *arg, const char *data, int len)
  * Read from a file
  */
 static int
-pfs_read(struct vop_read_args *va)
+pfs_read(struct vnop_read_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
