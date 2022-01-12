@@ -49,6 +49,7 @@ __FBSDID("$FreeBSD$");
 //#include <sys/sx.h>
 #include <sys/sysctl.h>
 #include <sys/vnode.h>
+#include <sys/vnode_if.h>
 
 #include "pseudofs.h"
 #include "pseudofs_internal.h"
@@ -214,7 +215,7 @@ pfs_close(struct vop_close_args *va)
  * Get file attributes
  */
 static int
-pfs_getattr(struct vop_getattr_args *va)
+pfs_getattr(struct vnop_getattr_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
