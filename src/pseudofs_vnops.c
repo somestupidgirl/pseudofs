@@ -161,7 +161,7 @@ pfs_access(struct vop_access_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
-	struct vattr vattr;
+	struct vnode_attr vattr;
 	int error;
 
 	PFS_TRACE(("%s", pvd->pvd_pn->pn_name));
@@ -220,7 +220,7 @@ pfs_getattr(struct vnop_getattr_args *va)
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
 	struct pfs_node *pn = pvd->pvd_pn;
-	struct vattr *vap = va->a_vap;
+	struct vnode_attr *vap = va->a_vap;
 	struct proc *proc;
 	int error = 0;
 	thread_t curthread = current_thread();

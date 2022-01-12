@@ -117,7 +117,7 @@ typedef int (*pfs_fill_t)(PFS_FILL_ARGS);
  * Attribute callback
  * Called with proc locked
  */
-struct vattr;
+struct vnode_attr vattr;
 #define PFS_ATTR_ARGS \
 	struct thread *td, struct proc *p, struct pfs_node *pn, \
 	struct vattr *vap
