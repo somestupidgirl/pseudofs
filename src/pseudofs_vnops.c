@@ -179,7 +179,7 @@ pfs_access(struct vnop_access_args *va)
  * Close a file or directory
  */
 static int
-pfs_close(struct vop_close_args *va)
+pfs_close(struct vnop_close_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
