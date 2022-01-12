@@ -129,6 +129,19 @@ int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, ui
     KASSERT((p)->p_lock > 0, ("process %p not held", p));        \
 } while (0)
 
+#define PRELE(p) do {                           \
+    PROC_LOCK((p));                         \
+    _PRELE((p));                            \
+    PROC_UNLOCK((p));                       \
+} while (0)
+#define _PRELE(p) do {                          \
+    PROC_LOCK_ASSERT((p), LCK_MTX_ASSERT_OWNED);                \
+    PROC_ASSERT_HELD(p);                        \
+    (--(p)->p_lock);                        \
+    if (((p)->p_flag & P_WEXIT) && (p)->p_lock == 0)        \
+        wakeup(&(p)->p_lock);                   \
+} while (0)
+
 // From XNU sys/proc_internal.h
 extern int nprocs, maxproc;
 
