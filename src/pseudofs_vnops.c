@@ -237,7 +237,7 @@ pfs_getattr(struct vnop_getattr_args *va)
 	vap->va_iosize = PAGE_SIZE;
 	vap->va_data_alloc = vap->va_data_size = 0;
 	vap->va_filerev = 0;
-	vap->va_fsid = vn->v_mount->mnt_stat.f_fsid.val[0];
+	vap->va_fsid = vn->v_mount->mnt_vfsstat.f_fsid.val[0];
 	vap->va_nlink = 1;
 	nanotime(&vap->va_change_time);
 	vap->va_access_time = vap->va_modify_time = vap->va_change_time;
