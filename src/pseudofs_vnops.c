@@ -809,7 +809,7 @@ pfs_read(struct vnop_read_args *va)
 		else
 			/* The trailing byte is not valid. */
 			buflen--;
-		error = uiomove_frombuf(sbuf_data(sb), buflen, uio);
+		error = pfs_uiomove_frombuf(sbuf_data(sb), buflen, uio);
 	}
 	sbuf_delete(sb);
 ret:
@@ -1077,7 +1077,7 @@ pfs_readlink(struct vnop_readlink_args *va)
 		PFS_RETURN (ENAMETOOLONG);
 	}
 
-	error = uiomove_frombuf(sbuf_data(&sb), sbuf_len(&sb), uio);
+	error = pfs_uiomove_frombuf(sbuf_data(&sb), sbuf_len(&sb), uio);
 	sbuf_delete(&sb);
 	PFS_RETURN (error);
 }

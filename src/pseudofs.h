@@ -263,6 +263,7 @@ int		 pfs_init	(struct pfs_info *pi, struct vfsconf *vfc);
 int		 pfs_uninit	(struct pfs_info *pi, struct vfsconf *vfc);
 int 	 pfs_getnewvnode(struct mount * mp, struct vnode * lowervp, struct vnode * dvp, struct vnode ** vpp, struct componentname * cnp, int root);
 int		 pfs_pcansee(struct thread *td, struct proc *p);
+int 	 pfs_uiomove_frombuf(void *buf, int buflen, struct uio *uio);
 
 typedef int (*vop_t)(void *);
 extern vop_t * pfs_vnodeop_p;
