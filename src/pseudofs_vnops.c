@@ -295,10 +295,10 @@ pfs_ioctl(struct vnop_ioctl_args *va)
 
 	vn = va->a_vp;
 	vnode_lock(vn);
-	if (VN_IS_DOOMED(vn)) {
-		VOP_UNLOCK(vn);
-		return (EBADF);
-	}
+//	if (VN_IS_DOOMED(vn)) {
+//		VOP_UNLOCK(vn);
+//		return (EBADF);
+//	}
 	pvd = vn->v_data;
 	pn = pvd->pvd_pn;
 
@@ -515,10 +515,10 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 			vfs_rel(mp);
 			if (error != 0)
 				PFS_RETURN(ENOENT);
-			if (VN_IS_DOOMED(vn)) {
-				vfs_unbusy(mp);
-				PFS_RETURN(ENOENT);
-			}
+//			if (VN_IS_DOOMED(vn)) {
+//				vfs_unbusy(mp);
+//				PFS_RETURN(ENOENT);
+//			}
 		}
 		VOP_UNLOCK(vn);
 		KASSERT(pd->pn_parent != NULL,
@@ -584,14 +584,14 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 	if (cnp->cn_flags & ISDOTDOT) {
 		vfs_unbusy(mp);
 		vnode_lock(vn);
-		if (VN_IS_DOOMED(vn)) {
-			vput(*vpp);
-			*vpp = NULL;
-			PFS_RETURN(ENOENT);
-		}
+//		if (VN_IS_DOOMED(vn)) {
+//			vput(*vpp);
+//			*vpp = NULL;
+//			PFS_RETURN(ENOENT);
+//		}
 	}
-	if (cnp->cn_flags & MAKEENTRY && !VN_IS_DOOMED(vn))
-		cache_enter(vn, *vpp, cnp);
+//	if (cnp->cn_flags & MAKEENTRY && !VN_IS_DOOMED(vn))
+//		cache_enter(vn, *vpp, cnp);
 	PFS_RETURN (0);
  failed:
 	if (cnp->cn_flags & ISDOTDOT) {
