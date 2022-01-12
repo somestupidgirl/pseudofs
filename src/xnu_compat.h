@@ -49,6 +49,7 @@ struct mount {
 struct proc {
     lck_mtx_t                       *p_mlock;
     pid_t                            p_pid;
+    kauth_cred_t                     p_ucred;
     unsigned int                     p_flag;
     u_int                            p_lock; // FreeBSD
 };
