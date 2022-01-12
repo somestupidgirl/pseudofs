@@ -217,7 +217,10 @@ retry2:
 		if (pvd2->pvd_pn == pn && pvd2->pvd_pid == pid &&
 		    pvd2->pvd_vnode->v_mount == mp) {
 			vp = pvd2->pvd_vnode;
+#if !defined(MACH_KERNEL_PRIVATE) && !defined(__APPLE_API_PRIVATE)
+#define MACH_KERNEL_PRIVATE && __APPLE_API_PRIVATE
 			VI_LOCK(vp);
+#endif
 			lck_mtx_unlock(&pfs_vncache_mutex);
 //			if (vget(vp, LK_EXCLUSIVE | LK_INTERLOCK) == 0) {
 //				++pfs_vncache_hits;
