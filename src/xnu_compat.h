@@ -23,6 +23,7 @@ struct mount {
 struct vnode {
     lck_mtx_t               *v_lock;
     uint32_t                 v_flag;
+    int32_t                  v_usecount;
     uint16_t                 v_type;
     mount_t                  v_mount;
     void                    *v_data;
@@ -83,6 +84,13 @@ extern int nprocs, maxproc;
 
 // From XNU sys/vnode_if.h (guarded by XNU_KERNEL_PRIVATE)
 extern errno_t VNOP_GETATTR(vnode_t, struct vnode_attr *, vfs_context_t);
+
+// From FreeBSD sys/vnode.h
+static __inline int
+vrefcnt(struct vnode *vp)
+{
+    return (vp->v_usecount);
+}
 
 // FIXME: error: use of undeclared identifier 'M_PFSNODES'
 #define M_PFSNODES				ENOTSUP
