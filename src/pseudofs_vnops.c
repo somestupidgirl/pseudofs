@@ -1087,7 +1087,7 @@ pfs_setattr(struct vnop_setattr_args *va)
  * Write to a file
  */
 static int
-pfs_write(struct vop_write_args *va)
+pfs_write(struct vnop_write_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
