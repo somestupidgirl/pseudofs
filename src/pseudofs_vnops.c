@@ -528,7 +528,7 @@ pfs_lookup(struct vnop_cachedlookup_args *va)
 			PFS_RETURN (EIO);
 		error = vfs_busy(mp, MBF_NOWAIT);
 		if (error != 0) {
-			vfs_ref(mp);
+//			vfs_ref(mp);
 #ifndef KERNEL
 #define KERNEL
 			VOP_UNLOCK(vn);
