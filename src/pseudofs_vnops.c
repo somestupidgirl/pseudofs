@@ -989,7 +989,7 @@ pfs_readdir(struct vnop_readdir_args *va)
  * Read a symbolic link
  */
 static int
-pfs_readlink(struct vop_readlink_args *va)
+pfs_readlink(struct vnop_readlink_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
