@@ -149,6 +149,9 @@ int kernel_mount(char *, vnode_t, vnode_t, const char *, void *, size_t, int, ui
 
 // From XNU sys/proc_internal.h
 extern int nprocs, maxproc;
+LIST_HEAD(proclist, proc);
+extern struct proclist allproc;
+extern struct proclist zombproc;
 
 // Based on FreeBSD vm/vm_swapout_dummy.c - Needed by _PHOLD
 static __inline void faultin(struct proc *p)
