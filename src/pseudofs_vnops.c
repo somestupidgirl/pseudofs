@@ -157,7 +157,7 @@ pfs_lookup_proc(pid_t pid, struct proc **p)
  * Verify permissions
  */
 static int
-pfs_access(struct vop_access_args *va)
+pfs_access(struct vnop_access_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
