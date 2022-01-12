@@ -851,7 +851,7 @@ STAILQ_HEAD(pfsdirentlist, pfsentry);
  * Return directory entries.
  */
 static int
-pfs_readdir(struct vop_readdir_args *va)
+pfs_readdir(struct vnop_readdir_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
