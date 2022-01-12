@@ -81,6 +81,9 @@ extern int nprocs, maxproc;
 #define PROC_TRYLOCK(p)				lck_mtx_try_lock(&(p)->p_mlock)
 #define PROC_LOCK_ASSERT(p, type)	LCK_MTX_ASSERT(&(p)->p_mlock, (type))
 
+// From XNU sys/vnode_if.h (guarded by XNU_KERNEL_PRIVATE)
+extern errno_t VNOP_GETATTR(vnode_t, struct vnode_attr *, vfs_context_t);
+
 // FIXME: error: use of undeclared identifier 'M_PFSNODES'
 #define M_PFSNODES				ENOTSUP
 
