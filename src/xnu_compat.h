@@ -21,7 +21,7 @@
 // Specific to pseudofs
 #define M_PFSVNCACHE                ENOTSUP
 
-//From FreeBSD sys/limits.h - redefined in accordance with XNU
+// From FreeBSD sys/limits.h - redefined in accordance with XNU
 #define OFF_MAX                     LONG_MAX
 #define OFF_MIN                     LONG_MIN
 
