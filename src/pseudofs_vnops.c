@@ -234,10 +234,10 @@ pfs_getattr(struct vnop_getattr_args *va)
 	vap->va_type = vn->v_type;
 	vap->va_fileid = pn_fileno(pn, pvd->pvd_pid);
 	vap->va_flags = 0;
-	vap->va_blocksize = PAGE_SIZE;
-	vap->va_bytes = vap->va_size = 0;
+	vap->va_iosize = PAGE_SIZE;
+	vap->va_data_size = vap->va_size = 0;
 	vap->va_filerev = 0;
-	vap->va_fsid = vn->v_mount->mnt_stat.f_fsid.val[0];
+	vap->va_fsid = vn->v_mount->mnt_vfsstat.f_fsid.val[0];
 	vap->va_nlink = 1;
 	nanotime(&vap->va_change_time);
 	vap->va_access_time = vap->va_modify_time = vap->va_change_time;
