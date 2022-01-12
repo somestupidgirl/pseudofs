@@ -251,6 +251,7 @@ enum    vgetstate  { VGET_NONE, VGET_HOLDCNT, VGET_USECOUNT };
 
 // From FreeBSD sys/vnode.h
 int     vaccess __P((mode_t file_mode, uid_t uid, gid_t gid, mode_t acc_mode, struct ucred *cred));
+void    vdrop __P((struct vnode *));
 int     vget __P((struct vnode *vp, int lockflag, struct proc *p));
 void    vgone __P((struct vnode *vp));
 void    vhold __P((struct vnode *));
