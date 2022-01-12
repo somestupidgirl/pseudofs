@@ -338,7 +338,7 @@ pfs_ioctl(struct vnop_ioctl_args *va)
  * Perform getextattr
  */
 static int
-pfs_getextattr(struct vop_getextattr_args *va)
+pfs_getextattr(struct vnop_getxattr_args *va)
 {
 	struct vnode *vn = va->a_vp;
 	struct pfs_vdata *pvd = vn->v_data;
