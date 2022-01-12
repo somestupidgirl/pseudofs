@@ -167,11 +167,11 @@ pfs_access(struct vnop_access_args *va)
 	PFS_TRACE(("%s", pvd->pvd_pn->pn_name));
 	(void)pvd;
 
-	error = VNOP_GETATTR(vn, &vattr, va->a_cred);
+	error = VNOP_GETATTR(vn, &vattr, va->a_context);
 	if (error)
 		PFS_RETURN (error);
 	error = vaccess(vn->v_type, vattr.va_mode, vattr.va_uid, vattr.va_gid,
-	    va->a_accmode, va->a_cred);
+	    NULL, va->a_context);
 	PFS_RETURN (error);
 }
 
