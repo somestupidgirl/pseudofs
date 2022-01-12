@@ -264,8 +264,8 @@ pfs_getattr(struct vnop_getattr_args *va)
 	}
 
 	if (proc != NULL) {
-		vap->va_uid = proc->p_ucred->cr_ruid;
-		vap->va_gid = proc->p_ucred->cr_rgid;
+		vap->va_uid = proc->p_ucred->cr_posix.cr_ruid;
+		vap->va_gid = proc->p_ucred->cr_posix.cr_rgid;
 	} else {
 		vap->va_uid = 0;
 		vap->va_gid = 0;
